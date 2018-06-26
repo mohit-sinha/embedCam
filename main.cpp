@@ -1,4 +1,5 @@
 
+#include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <zbar.h>
 #include <iostream>
@@ -36,8 +37,14 @@ int main(int argc, char* argv[])
     while (1)
     {
         Mat frame;	
+        VideoCapture video("video.mp4");
+ 
+    	double fps = video.get(CV_CAP_PROP_FPS);
 
         bool bSuccess = cap.read(frame); // read a new frame from video
+        cout << "Frames per second using video.get(CV_CAP_PROP_FPS) : " << fps << endl;
+     
+    	video.release(); 
 
          if (!bSuccess) //if not success, break loop
         {
@@ -54,34 +61,34 @@ int main(int argc, char* argv[])
         // wrap image data  
         Image image(width, height, "Y800", raw, width * height);  
         // scan the image for barcodes  
-	clock_t start = clock(); // will start calculating time
+		clock_t start = clock(); // will start calculating time
         int n = scanner.scan(image);  
-	bool data = false;
+		bool data = false;
         // extract results  
         for(Image::SymbolIterator symbol = image.symbol_begin();  
         symbol != image.symbol_end();  
         ++symbol) {  
                 vector<Point> vp;  
-        // do something useful with results  
-	if(symbol->get_data() != ""){data = true;}
-        cout << "decoded " << symbol->get_type_name()  << " symbol \"" << symbol->get_data() << '"' <<" "<< endl;  
-           int n = symbol->get_location_size();  
-           for(int i=0;i<n;i++){  
-                vp.push_back(Point(symbol->get_location_x(i),symbol->get_location_y(i))); 
-           }  
-           RotatedRect r = minAreaRect(vp);  
-           Point2f pts[4];  
-           r.points(pts);  
-           for(int i=0;i<4;i++){  
-                line(frame,pts[i],pts[(i+1)%4],Scalar(255,0,0),3);  
-           }  
-           //cout<<"Angle: "<<r.angle<<endl;  
+        		// do something useful with results  
+				if(symbol->get_data() != ""){data = true;}
+        		cout << "decoded " << symbol->get_type_name()  << " symbol \"" << symbol->get_data() << '"' <<" "<< endl;  
+           		int n = symbol->get_location_size();  
+           		for(int i=0;i<n;i++){  
+                	vp.push_back(Point(symbol->get_location_x(i),symbol->get_location_y(i))); 
+           		}  
+           		RotatedRect r = minAreaRect(vp);  
+           		Point2f pts[4];  
+           		r.points(pts);  
+           		for(int i=0;i<4;i++){  
+                	line(frame,pts[i],pts[(i+1)%4],Scalar(255,0,0),3);  
+           		}  
+           		//cout<<"Angle: "<<r.angle<<endl;  
         }  
-	clock_t end = clock();
-	if(data){
-		cout << "Time taken to read code = " 
-          	     << static_cast<double)((end-start))/CLOCKS_PER_SEC << " seconds.";
-	}        
+		clock_t end = clock();
+		if(data){
+			cout<< "Time taken to read code = " 
+          		<< static_cast<double>((end-start))/CLOCKS_PER_SEC << " seconds.";
+		}        
     }
     return 0;
 
