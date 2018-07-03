@@ -32,18 +32,18 @@ Steps to completely set **embeded camera** up:
 
 7. Compile the main.cpp file using - 
     ```sh
-    $ g++ main.cpp $(pkg-config --cflags --lflags opencv) -l lzbar -o barcode.bin
+    $ g++ main.cpp $(pkg-config --cflags --lflags opencv) -l lzbar -o qrcode.bin
     ```
     or in some cases -
     ```sh
-    $ g++ main.cpp /usr/local/include/ /usr/local/lib/ -lopencv_highgui.2.4.8 -lopencv_core.2.4.8 -o barcode.bin
+    $ g++ main.cpp /usr/local/include/ /usr/local/lib/ -lopencv_highgui.2.4.8 -lopencv_core.2.4.8 -o qrcode.bin
     ```
    If you get Linking Errors, you probably have not run `sudo ldconfig` or in bad luck, you might have to reinstall everything. 
 
    
 8. Connect Webcam to Rasberry Pi via USB and in terminal-
    ```sh
-   $./barcode.bin
+   $./qrcode.bin
    ```
 
 Now you can bring any QR Code infront of the camera and you will see the info. Speed and framerate are remarkably fast for a simple code like this.
